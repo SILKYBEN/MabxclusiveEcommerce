@@ -22,3 +22,9 @@ select,
 textarea {
     max-width: 280px;
 }
+table.sorting.table-bordered.table-hover.table-striped tr:not(.home){
+    cursor:pointer;
+}
+.ui-state-highlight{
+    border:1px dashed #ccc;
+}

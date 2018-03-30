@@ -1,0 +1,128 @@
+﻿@model IEnumerable<MabxclusiveEcommerce.Models.ViewModels.Pages.PageVM>
+
+@{
+    ViewBag.Title = "Pages";
+}
+
+<div id="page-wrapper">
+
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">
+                    Pages
+                </h1>
+                <ol class="breadcrumb">
+                    <li>
+                        <i class="fa fa-dashboard"></i>  <a href="/admin/dashboard">Dashboard</a>
+                    </li>
+                    <li class="active">
+                        <i class="fa fa-table"></i> Pages
+                    </li>
+                </ol>
+            </div>
+        </div>
+        <!-- /.row -->
+
+        <div class="row">
+
+            <div class="col-lg-12">
+                <p>
+                    @Html.ActionLink("Add New Page", "addPage")
+                </p>
+
+                <div class="table-responsive">
+                    @if (!Model.Any())
+                    {
+                        <h1 class="text-center"> There are no custom pages.</h1>
+                    }
+                    else
+                    {
+                        <table class="table sorting table-bordered table-hover table-striped" id="pages">
+                            <thead>
+                                <tr class="home">
+                                    <th>Title</th>
+                                    <th>Slug</th>
+                                    <th>Has Sidebar</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr id="id_@item.Id" class="@item.Slug">
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Title)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Slug)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.HasSidebar)
+                                        </td>
+                                        <td>
+                                            @Html.ActionLink("Edit", "EditPage", new { id = item.Id }) |
+                                            @Html.ActionLink("Details", "PageDetails", new { id = item.Id }) |
+                                            @if (item.Slug != "home")
+                                            {
+                                                @Html.ActionLink("Delete", "DeletePage", new { id = item.Id }, new { @class = "delete" })
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    }
+
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+
+
+
+    </div>
+    <!-- /.container-fluid -->
+
+</div>
+@section Scripts {
+
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+    <script>
+        $(function () {
+
+            /*
+            confirm page deletion not yet working
+            */
+            $("a.delete").click(function () {
+                if (!confirm("Confirm Page deletion")) return false;
+            });
+
+            ///////////////////////////////////////////
+
+            /*
+            Sorting Pages
+            */
+            $("table#pages tbody").sortable({
+                items: "tr:not(.home)",
+                placeholder: "ui-state-highlight",
+                update: function () {
+                    var ids = $("table#pages tbody").sortable("serialize");
+                    var url = "/Admin/Pages/ReorderPages";
+                    $.post(url, ids, function (data) {
+
+                    });
+                }
+            });
+
+            ///////////////////////////////////////////
+        });
+    </script>
+
+
+}
+<!-- /#page-wrapper -->
